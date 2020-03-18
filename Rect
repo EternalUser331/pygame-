@@ -1,0 +1,49 @@
+import pygame
+
+FPS = 3
+SCREEN = (600, 600)
+R = 290
+
+BLACK = (0, 0, 0)
+play = True
+for_update = ()
+pygame.display.init()
+
+
+def color_circle():
+    colors = [(255, 0, 0), (0, 0, 255)]
+    while True:
+        x = colors.pop(0)
+        colors.append(x)
+        yield x
+
+
+COLOR_CIRCLE = color_circle()
+
+sc = pygame.display.set_mode(SCREEN)
+sc.fill(BLACK)
+
+circle = pygame.draw.circle(sc, next(COLOR_CIRCLE), (SCREEN[0] // 2, SCREEN[1] // 2), R)
+rec_1 = pygame.Rect((0, 0), (300, 300))
+rec_2 = pygame.Rect((300, 0), (300, 300))
+rec_3 = pygame.Rect((0, 300), (300, 300))
+rec_4 = pygame.Rect((300, 300), (300, 300))
+
+pygame.display.update()
+
+while play:
+    circle = pygame.draw.circle(sc, next(COLOR_CIRCLE), (300, 300), 290)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            play = False
+
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            for_update = (rec_1, rec_4)
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+            for_update = (rec_2, rec_3)
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 2:
+            for_update = (rec_1, rec_2, rec_3, rec_4)
+
+    pygame.display.update(for_update)
+
+    pygame.time.Clock().tick(FPS)
